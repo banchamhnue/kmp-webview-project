@@ -18,13 +18,15 @@ struct ContentView: View {
     func fetchTodoData() {
         let apiClient = ApiClient()
         
-        apiClient.fetchTodo { todo, error in
-            if let todo = todo {
-                DispatchQueue.main.async {
+        // Call the suspend function from Swift
+        Task {
+            do {
+                let todo = try await apiClient.fetchTodo()
+                await MainActor.run {
                     PlatformKt.showMessage(message: todo.title)
                 }
-            } else if let error = error {
-                DispatchQueue.main.async {
+            } catch {
+                await MainActor.run {
                     PlatformKt.showMessage(message: "Error: \(error.localizedDescription)")
                 }
             }
