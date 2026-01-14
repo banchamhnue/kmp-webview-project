@@ -47,4 +47,8 @@ class ApiClient {
             )
         }
     }
+    
+    fun close() {
+        client.close()
+    }
 }

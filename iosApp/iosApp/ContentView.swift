@@ -3,6 +3,9 @@ import WebKit
 import shared
 
 struct ContentView: View {
+    // Cache ApiClient to avoid recreation
+    private let apiClient = ApiClient()
+    
     var body: some View {
         ZStack {
             WebView(url: URL(string: "https://sgcarmart.com")!)
@@ -14,8 +17,6 @@ struct ContentView: View {
     }
     
     func fetchTodoData() {
-        let apiClient = ApiClient()
-        
         // Call the suspend function from Swift
         Task {
             do {

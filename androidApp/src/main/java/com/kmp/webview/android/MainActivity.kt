@@ -8,6 +8,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import com.kmp.webview.ApiClient
@@ -31,7 +32,8 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun WebViewScreen() {
-    val apiClient = ApiClient()
+    // Remember ApiClient across recompositions
+    val apiClient = remember { ApiClient() }
     
     // Fetch API data on launch
     LaunchedEffect(Unit) {
