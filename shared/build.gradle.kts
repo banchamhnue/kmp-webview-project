@@ -8,6 +8,7 @@ plugins {
 val ktorVersion = "2.3.7"
 val coroutinesVersion = "1.7.3"
 val serializationVersion = "1.6.2"
+val lifecycleVersion = "2.6.2"
 
 kotlin {
     androidTarget {
@@ -43,6 +44,7 @@ kotlin {
         val androidMain by getting {
             dependencies {
                 implementation("io.ktor:ktor-client-android:$ktorVersion")
+                implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
             }
         }
         

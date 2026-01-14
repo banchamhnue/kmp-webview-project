@@ -8,14 +8,17 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
-import com.kmp.webview.ApiClient
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.kmp.webview.di.CommonModule
+import com.kmp.webview.presentation.MainViewModel
+import com.kmp.webview.presentation.TodoState
 import com.kmp.webview.setToastContext
 import com.kmp.webview.showMessage
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,16 +34,23 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun WebViewScreen() {
-    val apiClient = remember { ApiClient() }
+    val viewModel: MainViewModel = viewModel {
+        MainViewModel(CommonModule.provideGetTodoUseCase())
+    }
     
-    LaunchedEffect(Unit) {
-        try {
-            val todo = withContext(Dispatchers.IO) {
-                apiClient.fetchTodo()
+    val todoState by viewModel.todoState.collectAsState()
+    
+    LaunchedEffect(todoState) {
+        when (val state = todoState) {
+            is TodoState.Success -> {
+                showMessage(state.todo.title)
             }
-            showMessage(todo.title)
-        } catch (e: Exception) {
-            showMessage("Error: ${e.message}")
+            is TodoState.Error -> {
+                showMessage("Error: ${state.message}")
+            }
+            is TodoState.Loading -> {
+                // Loading state, do nothing
+            }
         }
     }
     

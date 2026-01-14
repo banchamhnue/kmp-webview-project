@@ -1,8 +1,5 @@
-package com.kmp.webview
+package com.kmp.webview.domain.model
 
-import kotlinx.serialization.Serializable
-
-@Serializable
 data class Todo(
     val userId: Int,
     val id: Int,

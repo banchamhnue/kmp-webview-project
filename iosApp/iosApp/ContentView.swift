@@ -3,7 +3,7 @@ import WebKit
 import shared
 
 struct ContentView: View {
-    private let apiClient = ApiClient()
+    @StateObject private var viewModel = TodoViewModel()
     
     var body: some View {
         ZStack {
@@ -11,20 +11,56 @@ struct ContentView: View {
                 .edgesIgnoringSafeArea(.all)
         }
         .onAppear {
-            fetchTodoData()
+            viewModel.fetchTodo()
+        }
+        .onChange(of: viewModel.todoState) { state in
+            handleTodoState(state)
         }
     }
     
-    func fetchTodoData() {
+    func handleTodoState(_ state: TodoViewState) {
+        switch state {
+        case .success(let todo):
+            PlatformKt.showMessage(message: todo.title)
+        case .error(let message):
+            PlatformKt.showMessage(message: "Error: \(message)")
+        case .loading:
+            break
+        }
+    }
+}
+
+enum TodoViewState: Equatable {
+    case loading
+    case success(Todo)
+    case error(String)
+}
+
+class TodoViewModel: ObservableObject {
+    @Published var todoState: TodoViewState = .loading
+    private let getTodoUseCase: GetTodoUseCase
+    
+    init() {
+        self.getTodoUseCase = CommonModule.shared.provideGetTodoUseCase()
+    }
+    
+    func fetchTodo() {
+        todoState = .loading
         Task {
             do {
-                let todo = try await apiClient.fetchTodo()
-                await MainActor.run {
-                    PlatformKt.showMessage(message: todo.title)
+                let result = try await getTodoUseCase.invoke()
+                if let todo = result.getOrNull() {
+                    await MainActor.run {
+                        todoState = .success(todo)
+                    }
+                } else if let error = result.exceptionOrNull() {
+                    await MainActor.run {
+                        todoState = .error(error.localizedDescription)
+                    }
                 }
             } catch {
                 await MainActor.run {
-                    PlatformKt.showMessage(message: "Error: \(error.localizedDescription)")
+                    todoState = .error(error.localizedDescription)
                 }
             }
         }
