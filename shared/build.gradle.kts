@@ -4,6 +4,11 @@ plugins {
     id("com.android.library")
 }
 
+// Dependency versions
+val ktorVersion = "2.3.7"
+val coroutinesVersion = "1.7.3"
+val serializationVersion = "1.6.2"
+
 kotlin {
     androidTarget {
         compilations.all {
@@ -27,17 +32,17 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("io.ktor:ktor-client-core:2.3.7")
-                implementation("io.ktor:ktor-client-content-negotiation:2.3.7")
-                implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.7")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
+                implementation("io.ktor:ktor-client-core:$ktorVersion")
+                implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+                implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
             }
         }
         
         val androidMain by getting {
             dependencies {
-                implementation("io.ktor:ktor-client-android:2.3.7")
+                implementation("io.ktor:ktor-client-android:$ktorVersion")
             }
         }
         
@@ -50,7 +55,7 @@ kotlin {
             iosArm64Main.dependsOn(this)
             iosSimulatorArm64Main.dependsOn(this)
             dependencies {
-                implementation("io.ktor:ktor-client-darwin:2.3.7")
+                implementation("io.ktor:ktor-client-darwin:$ktorVersion")
             }
         }
     }

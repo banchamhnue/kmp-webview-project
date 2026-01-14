@@ -24,6 +24,8 @@ actual fun showMessage(message: String) {
     )
     
     // Use modern API for iOS 13+ with type-safe scene lookup
+    // connectedScenes is documented to return NSSet, safe to cast
+    @Suppress("UNCHECKED_CAST")
     val scenes = UIApplication.sharedApplication.connectedScenes as NSSet
     val windowScene = scenes.allObjects.firstOrNull { it is UIWindowScene } as? UIWindowScene
     val rootViewController = windowScene?.windows?.firstOrNull()?.rootViewController
