@@ -25,8 +25,7 @@ actual fun showMessage(message: String) {
     
     // Use modern API for iOS 13+ with type-safe scene lookup
     val scenes = UIApplication.sharedApplication.connectedScenes as NSSet
-    val windowScene = scenes.allObjects
-        .firstNotNullOfOrNull { it as? UIWindowScene }
+    val windowScene = scenes.allObjects.firstOrNull { it is UIWindowScene } as? UIWindowScene
     val rootViewController = windowScene?.windows?.firstOrNull()?.rootViewController
     
     rootViewController?.presentViewController(
