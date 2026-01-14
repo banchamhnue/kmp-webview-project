@@ -6,6 +6,7 @@ import platform.UIKit.UIAlertAction
 import platform.UIKit.UIAlertActionStyleDefault
 import platform.UIKit.UIApplication
 import platform.UIKit.UIWindowScene
+import platform.Foundation.NSSet
 
 actual fun showMessage(message: String) {
     val alert = UIAlertController.alertControllerWithTitle(
@@ -22,9 +23,10 @@ actual fun showMessage(message: String) {
         )
     )
     
-    // Use modern API for iOS 13+
-    val windowScene = UIApplication.sharedApplication.connectedScenes
-        .firstOrNull() as? UIWindowScene
+    // Use modern API for iOS 13+ with type-safe scene lookup
+    val scenes = UIApplication.sharedApplication.connectedScenes as NSSet
+    val windowScene = scenes.allObjects
+        .firstNotNullOfOrNull { it as? UIWindowScene }
     val rootViewController = windowScene?.windows?.firstOrNull()?.rootViewController
     
     rootViewController?.presentViewController(
