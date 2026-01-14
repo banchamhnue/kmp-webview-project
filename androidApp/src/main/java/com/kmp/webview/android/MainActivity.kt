@@ -21,7 +21,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
-        // Set the context for Toast
         setToastContext(this)
         
         setContent {
@@ -32,10 +31,8 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun WebViewScreen() {
-    // Remember ApiClient across recompositions
     val apiClient = remember { ApiClient() }
     
-    // Fetch API data on launch
     LaunchedEffect(Unit) {
         try {
             val todo = withContext(Dispatchers.IO) {
@@ -47,7 +44,6 @@ fun WebViewScreen() {
         }
     }
     
-    // WebView to load sgcarmart.com
     AndroidView(
         modifier = Modifier.fillMaxSize(),
         factory = { context ->

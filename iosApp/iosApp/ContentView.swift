@@ -3,7 +3,6 @@ import WebKit
 import shared
 
 struct ContentView: View {
-    // Cache ApiClient to avoid recreation
     private let apiClient = ApiClient()
     
     var body: some View {
@@ -17,7 +16,6 @@ struct ContentView: View {
     }
     
     func fetchTodoData() {
-        // Call the suspend function from Swift
         Task {
             do {
                 let todo = try await apiClient.fetchTodo()
