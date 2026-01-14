@@ -3,8 +3,6 @@ import WebKit
 import shared
 
 struct ContentView: View {
-    @State private var isLoading = true
-    
     var body: some View {
         ZStack {
             WebView(url: URL(string: "https://sgcarmart.com")!)

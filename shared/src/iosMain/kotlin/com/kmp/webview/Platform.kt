@@ -5,6 +5,7 @@ import platform.UIKit.UIAlertControllerStyleAlert
 import platform.UIKit.UIAlertAction
 import platform.UIKit.UIAlertActionStyleDefault
 import platform.UIKit.UIApplication
+import platform.UIKit.UIWindowScene
 
 actual fun showMessage(message: String) {
     val alert = UIAlertController.alertControllerWithTitle(
@@ -21,7 +22,12 @@ actual fun showMessage(message: String) {
         )
     )
     
-    UIApplication.sharedApplication.keyWindow?.rootViewController?.presentViewController(
+    // Use modern API for iOS 13+
+    val windowScene = UIApplication.sharedApplication.connectedScenes
+        .firstOrNull() as? UIWindowScene
+    val rootViewController = windowScene?.windows?.firstOrNull()?.rootViewController
+    
+    rootViewController?.presentViewController(
         alert,
         animated = true,
         completion = null
